@@ -60,6 +60,88 @@
             margin: 15px 0;
         }
 
+        .purchase-info {
+            background: #fff9e6;
+            border: 2px solid #ffc107;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .purchase-info p {
+            color: #333;
+            line-height: 1.8;
+            margin-bottom: 10px;
+        }
+
+        .purchase-link {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            margin-top: 10px;
+            transition: background 0.3s;
+        }
+
+        .purchase-link:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .purchase-info strong {
+            color: #d63384;
+        }
+
+        .dm-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .dm-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: white;
+            color: #333;
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            border: 2px solid #667eea;
+            transition: all 0.3s;
+        }
+
+        .dm-link:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .dm-link.twitter {
+            border-color: #1DA1F2;
+        }
+
+        .dm-link.twitter:hover {
+            background: #1DA1F2;
+            color: white;
+        }
+
+        .dm-link.threads {
+            border-color: #000000;
+        }
+
+        .dm-link.threads:hover {
+            background: #000000;
+            color: white;
+        }
+
         .password-section {
             background: #fff3cd;
             padding: 25px;
@@ -215,6 +297,19 @@
             button {
                 width: 100%;
             }
+
+            .purchase-link {
+                display: block;
+                text-align: center;
+            }
+
+            .dm-links {
+                flex-direction: column;
+            }
+
+            .dm-link {
+                justify-content: center;
+            }
         }
     </style>
 </head>
@@ -229,6 +324,28 @@
                 <iframe src="https://stand.fm/embed/episodes/6954b4de21230bdc1fbe5999" height="190" frameborder="0"></iframe>
             </div>
             <p class="note">こちらのエピソードは誰でも無料でお聴きいただけます。</p>
+
+            <!-- 購入案内 -->
+            <div class="purchase-info">
+                <p>📝 <strong>音声の元の記事はこちらです。</strong></p>
+                <p>有料部分の音声は、↓のURLからコンテンツをご購入いただき、ご購入が確認できるスクショを、DMでお送りください。<br>
+                確認でき次第、パスワードをお送りします。</p>
+                <a href="https://brmk.io/vmk9C5" target="_blank" rel="noopener noreferrer" class="purchase-link">
+                    📄 記事を見る・購入する
+                </a>
+
+                <p style="margin-top: 20px; font-weight: bold;">💬 DMはこちらから：</p>
+                <div class="dm-links">
+                    <a href="https://x.com/yayoi_threee" target="_blank" rel="noopener noreferrer" class="dm-link twitter">
+                        <span>𝕏</span>
+                        <span>X (Twitter) でDM</span>
+                    </a>
+                    <a href="https://www.threads.net/@yayoi_threee" target="_blank" rel="noopener noreferrer" class="dm-link threads">
+                        <span>◎</span>
+                        <span>Threads でDM</span>
+                    </a>
+                </div>
+            </div>
         </div>
 
         <!-- パスワード入力セクション -->
