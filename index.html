@@ -56,7 +56,7 @@
             margin-bottom: 30px;
         }
 
-        .standfm-embed {
+        .player-container {
             margin: 15px 0;
         }
 
@@ -170,6 +170,31 @@
             font-style: italic;
         }
 
+        .info-box {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            border-radius: 8px;
+            padding: 12px 15px;
+            margin: 15px 0;
+            color: #0c5460;
+            font-size: 14px;
+        }
+
+        .platform-label {
+            font-weight: bold;
+            color: #667eea;
+            font-size: 16px;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .platform-icon {
+            font-size: 20px;
+        }
+
         @media (max-width: 600px) {
             .container {
                 padding: 20px;
@@ -200,7 +225,7 @@
         <!-- 無料コンテンツセクション -->
         <div class="section free-content">
             <h2 class="section-title">📻 無料で聴けるコンテンツ</h2>
-            <div class="standfm-embed">
+            <div class="player-container">
                 <iframe src="https://stand.fm/embed/episodes/6954b4de21230bdc1fbe5999" height="190" frameborder="0"></iframe>
             </div>
             <p class="note">こちらのエピソードは誰でも無料でお聴きいただけます。</p>
@@ -223,17 +248,36 @@
         <div class="premium-content" id="premiumContent">
             <h2 class="section-title"><span class="success-icon">✅</span>限定コンテンツ</h2>
             <p style="margin-bottom: 15px; color: #28a745; font-weight: bold;">パスワード認証に成功しました！</p>
-            <div class="standfm-embed">
-                <iframe id="premiumIframe" height="190" frameborder="0"></iframe>
+            
+            <div class="info-box">
+                💡 どちらも同じ音声です。聞きやすいほうでお楽しみください。
             </div>
+
+            <!-- スタンドFM -->
+            <div class="platform-label">
+                <span class="platform-icon">🎙️</span>
+                <span>stand.fm で聴く</span>
+            </div>
+            <div class="player-container">
+                <iframe id="standfmIframe" height="190" frameborder="0"></iframe>
+            </div>
+
+            <!-- YouTube -->
+            <div class="platform-label">
+                <span class="platform-icon">📺</span>
+                <span>YouTube で聴く</span>
+            </div>
+            <div class="player-container">
+                <iframe id="youtubeIframe" height="315" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+
             <p class="note">このコンテンツはパスワードをお持ちの方のみご視聴いただけます。</p>
         </div>
     </div>
 
     <script>
-        // 暗号化されたデータ（パスワードとURLを暗号化して保存）
-        // この部分はソースコードを見ても元のパスワードとURLは分かりません
-        const encryptedData = "BQOFNzbQEXi9zb8wbLhDKaJDszAWawWq8M3dXCToirJbTsRzJolYNfyI7G049EEnvEC8N0ZtHqw=";
+        // 暗号化されたデータ（スタンドFMとYouTubeのURLを暗号化して保存）
+        const encryptedData = "FlWCMySEWjGjm+R+Kv5RMP1V5H1cfF6u7sCAVS2inPAPEpVoIJpXJKHduy0noBxxuUW9NBE9G/2zlMxXI7yf/whCk3MmyBJ37MCxK3zjRyGvHP5wG3tev/OegRw3+o6zFBiEMzCIW3mt1rNxbftHIekJlRAsfkX/9OHxBzevhA==";
         
         // SHA-256ハッシュ関数
         async function sha256(message) {
@@ -286,22 +330,33 @@
             // 復号化を試みる
             const decrypted = await decrypt(encryptedData, input);
             
-            // URLの形式をチェック（正しく復号化されたか確認）
-            if (decrypted && decrypted.startsWith('https://stand.fm/')) {
-                // 復号化成功 - 正しいパスワード
-                document.getElementById('premiumIframe').src = decrypted;
-                premiumContent.classList.add('show');
-                errorMessage.classList.remove('show');
+            try {
+                // JSONとしてパース
+                const urls = JSON.parse(decrypted);
                 
-                // パスワード入力欄をクリア
-                document.getElementById('passwordInput').value = '';
-                
-                // 限定コンテンツまでスムーズにスクロール
-                setTimeout(() => {
-                    premiumContent.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                }, 100);
-            } else {
-                // 復号化失敗 - 間違ったパスワード
+                // URLの形式をチェック（正しく復号化されたか確認）
+                if (urls && urls.standfm && urls.youtube) {
+                    // 復号化成功 - 正しいパスワード
+                    document.getElementById('standfmIframe').src = urls.standfm;
+                    document.getElementById('youtubeIframe').src = urls.youtube;
+                    premiumContent.classList.add('show');
+                    errorMessage.classList.remove('show');
+                    
+                    // パスワード入力欄をクリア
+                    document.getElementById('passwordInput').value = '';
+                    
+                    // 限定コンテンツまでスムーズにスクロール
+                    setTimeout(() => {
+                        premiumContent.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    }, 100);
+                } else {
+                    // 復号化失敗 - 間違ったパスワード
+                    errorMessage.textContent = '❌ パスワードが正しくありません';
+                    errorMessage.classList.add('show');
+                    premiumContent.classList.remove('show');
+                }
+            } catch (e) {
+                // JSONパースエラー - 間違ったパスワード
                 errorMessage.textContent = '❌ パスワードが正しくありません';
                 errorMessage.classList.add('show');
                 premiumContent.classList.remove('show');
